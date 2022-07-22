@@ -42,10 +42,12 @@ jobs:
           }
 
           startdate=$(date +%s)
+          
           (
             set -ex
             build
           )
+          
           enddate=$(date +%s)
 
           errorCode=$?
