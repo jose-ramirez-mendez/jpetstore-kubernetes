@@ -23,7 +23,6 @@ jobs:
     inputs:
       targetType: inline
       script: >
-          
           echo "Building application..."
 
           build(){
@@ -42,15 +41,15 @@ jobs:
             
           }
 
-          export startdate=$(date +%s)
+          startdate=$(date +%s)
           (
             set -ex
             build
           )
-          export enddate=$(date +%s)
+          enddate=$(date +%s)
 
           errorCode=$?
-
+          
           rm -rf build_status
 
           if [ $errorCode -ne 0 ]; then
