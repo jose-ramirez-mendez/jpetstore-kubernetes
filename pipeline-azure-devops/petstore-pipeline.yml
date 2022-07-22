@@ -22,7 +22,57 @@ jobs:
     displayName: Build
     inputs:
       targetType: inline
-      script: "#!/bin/sh\n\n#echo \"Installing docker trivy...\"\n#sudo apt-get install wget apt-transport-https gnupg lsb-release\n#wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -\n#echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list\n#sudo apt-get update\n# sudo apt-get install trivy\n\necho \"Building application...\"\n\nbuild(){\n\n  JPETSTOREWEB=\"${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_NUMBER}\"\n  JPETSTOREDB=\"${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_NUMBER}\"\n  \n  docker build -t $JPETSTOREWEB ./jpetstore\n  docker build -t $JPETSTOREDB .\n  \n  docker logout\n  docker login -u \"${DOCKER_USERNAME}\" -p \"${DOCKER_PASSWORD}\"\n  \n  docker push $JPETSTOREWEB\n  docker push $JPETSTOREDB\n  \n  #trivy image --format json -o jpetstore-web-scan.json $JPETSTOREWEB\n  #trivy image --format json -o jpetstore-db-scan.json $JPETSTOREDB\n}\n\nexport startdate=$(date +%s)\n(\n  set -ex\n  build\n)\nexport enddate=$(date +%s)\n\nerrorCode=$?\n\nrm -rf build_status\n\nif [ $errorCode -ne 0 ]; then\n  echo \"Application build has failed\"\n  echo \"failed\" >> build_status\nelse\n  echo \"Application build has succeded\"\n  echo \"success\" >> build_status\nfi\n\nexport SERVICE_NAME=\"petstore_on_aks_azure_devops\"\nexport BUILD_DURATION_TIME=$((enddate - startdate))\nexport BUILD_ENGINE=\"Azure DevOps\"\nexport BUILD_STATUS=$(cat build_status)\nexport BUILD_HREF=\"${SYSTEM_TEAMFOUNDATIONSERVERURI}${SYSTEM_DEFINITIONNAME}/_build/results?buildId=${BUILD_NUMBER}&view=results\"\nexport RUN_ID=$BUILD_NUMBER\nexport BRANCH=$BUILD_SOURCEBRANCHNAME\nexport COMMIT=$(git rev-parse HEAD)\n\npython3 -m pip install -r ./publish_data/requirements.txt \npython3 ./publish_data/publish.py --build\n"
+      script: >
+          
+          echo "Building application..."
+
+          build(){
+
+            JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_NUMBER}"
+            JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_NUMBER}"
+
+            docker build -t $JPETSTOREWEB ./jpetstore
+            docker build -t $JPETSTOREDB .
+
+            docker logout
+            docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+
+            docker push $JPETSTOREWEB
+            docker push $JPETSTOREDB
+            
+          }
+
+          export startdate=$(date +%s)
+          (
+            set -ex
+            build
+          )
+          export enddate=$(date +%s)
+
+          errorCode=$?
+
+          rm -rf build_status
+
+          if [ $errorCode -ne 0 ]; then
+            echo "Application build has failed"
+            echo "failed" >> build_status
+          else
+            echo "Application build has succeded"
+            echo "success" >> build_status
+          fi
+
+          export SERVICE_NAME="petstore_on_aks_azure_devops"
+          export BUILD_DURATION_TIME=$((enddate - startdate))
+          export BUILD_ENGINE="Azure DevOps"
+          export BUILD_STATUS=$(cat build_status)
+          export BUILD_HREF="${SYSTEM_TEAMFOUNDATIONSERVERURI}${SYSTEM_DEFINITIONNAME}/_build/results?buildId=${BUILD_NUMBER}&view=results"
+          export RUN_ID=$BUILD_NUMBER
+          export BRANCH=$BUILD_SOURCEBRANCHNAME
+          export COMMIT=$(git rev-parse HEAD)
+
+          python3 -m pip install -r ./pipeline-common/publish_data/requirements.txt 
+          python3 ./pipeline-common/publish_data/publish.py --build
+        
   - task: Bash@3
     displayName: Test
     inputs:
