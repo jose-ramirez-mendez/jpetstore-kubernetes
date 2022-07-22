@@ -20,6 +20,12 @@ jobs:
   - task: Bash@3
     name: ''
     displayName: Build
+    env:
+      DOCKER_USERNAME: $(DOCKER_USER)
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+      BUILD_NUMBER: $(Build.BuildNumber)
+      TENANT_URL: ${TENANT_URL}
+      BUILD_TOKEN: ${BUILD_TOKEN}
     inputs:
       targetType: inline
       script: >
