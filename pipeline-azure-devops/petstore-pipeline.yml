@@ -133,9 +133,9 @@ jobs:
           export COMMIT=$(git rev-parse HEAD)
           export BUILD_ENGINE="Azure DevOps"
 
-          cp ./jpetstore/build/reports/TEST-*.xml ./pipeline-common/publish_data/publish_data
+          cp ./jpetstore/build/reports/TEST-*.xml ./pipeline-common/publish_data/
           
-          cd ./pipeline-common/publish_data/publish_data
+          cd ./pipeline-common/publish_data/
           
           python3 publish.py --test
           
