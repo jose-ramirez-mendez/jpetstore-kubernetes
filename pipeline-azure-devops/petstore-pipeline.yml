@@ -83,9 +83,63 @@ jobs:
         
   - task: Bash@3
     displayName: Test
+    env:
+      BUILD_NUMBER: $(Build.BuildNumber)
     inputs:
       targetType: inline
-      script: "#!/bin/sh\n\necho \"Testing application...\"\n\ntest(){\n  \n   cd jpetstore\n\n   ant runtest\n\n   cd ..\n}\n\nstartdate=$(date +%s)\n(\n   set -e\n   test\n)\nenddate=$(date +%s)\n\nerrorCode=$?\n\nif [ $errorCode -ne 0 ]; then\n    echo \"Application test has failed\"\n    echo \"failed\" >> test_status\nelse\n    echo \"Application test has succeded\"\n    echo \"success\" >> test_status\nfi\n\necho \"$((enddate - startdate))\" >> test_duration_time\n\nexport SERVICE_NAME=\"petstore_on_aks_azure_devops\"\nexport TEST_STATUS=$(cat test_status)\nexport TEST_DURATION_TIME=$(cat test_duration_time)\nexport TEST_TYPE=\"unit\"\nexport TEST_FILE_TYPE=\"xunit\"\nexport TEST_ENGINE=\"XUNIT\"\nexport TEST_ENVIRONMENT=\"Azure DevOps\"\nexport TEST_RELEASE=\"${BUILD_NUMBER}\"\nexport TEST_FILE=\"TEST-org.springframework.samples.jpetstore.domain.CartTest.xml\"\nexport RUN_ID=$BUILD_NUMBER\nexport BRANCH=$BUILD_SOURCEBRANCHNAME\nexport COMMIT=$(git rev-parse HEAD)\nexport BUILD_ENGINE=\"Azure DevOps\"\n\ncp ./jpetstore/build/reports/TEST-*.xml ./publish_data\ncd ./publish_data\npython3 publish.py --test"
+      script: >
+      
+          echo "Testing application..."
+
+          test(){
+
+             cd jpetstore
+
+             ant runtest
+
+             cd ..
+          }
+
+          startdate=$(date +%s)
+          (
+             set -e
+             test
+          )
+          enddate=$(date +%s)
+
+          errorCode=$?
+
+          if [ $errorCode -ne 0 ]; then
+              echo "Application test has failed"
+              echo "failed" >> test_status
+          else
+              echo "Application test has succeded"
+              echo "success" >> test_status
+          fi
+
+          export SERVICE_NAME="petstore_on_aks_azure_devops"
+          export TEST_STATUS=$(cat test_status)
+          export TEST_DURATION_TIME=$((enddate - startdate))
+          export TEST_TYPE="unit"
+          export TEST_FILE_TYPE="xunit"
+          export TEST_ENGINE="XUNIT"
+          export TEST_ENVIRONMENT="Azure DevOps"
+          export TEST_RELEASE="${BUILD_NUMBER}"
+          export TEST_FILE="TEST-org.springframework.samples.jpetstore.domain.CartTest.xml"
+          export RUN_ID=$BUILD_NUMBER
+          export BRANCH=$BUILD_SOURCEBRANCHNAME
+          export COMMIT=$(git rev-parse HEAD)
+          export BUILD_ENGINE="Azure DevOps"
+
+          cp ./jpetstore/build/reports/TEST-*.xml ./pipeline-common/publish_data/publish_data
+          
+          cd ./pipeline-common/publish_data/publish_data
+          
+          python3 publish.py --test
+          
+          cd ..
+          cd ..
+      
   - task: Bash@3
     displayName: Secure
     inputs:
