@@ -30,6 +30,8 @@ jobs:
       targetType: inline
       script: >
           echo "Building application..."
+          
+          env
 
           build(){
 
