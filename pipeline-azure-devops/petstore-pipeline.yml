@@ -35,8 +35,8 @@ jobs:
 
           build(){
 
-            JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_NUMBER}"
-            JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_NUMBER}"
+            JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_BUILDID}"
+            JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_BUILDID}"
 
             docker build -t $JPETSTOREWEB ./jpetstore
             docker build -t $JPETSTOREDB .
@@ -170,9 +170,9 @@ jobs:
         # Image scan
 
 
-        JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_NUMBER}"
+        JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_BUILDID}"
 
-        JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_NUMBER}"
+        JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_BUILDID}"
 
 
         imagescan(){
@@ -243,9 +243,9 @@ jobs:
 
         mkdir -p chart_zip
 
-        JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_NUMBER}"
+        JPETSTOREWEB="${DOCKER_USERNAME}/azurejpetstoreweb:${BUILD_BUILDID}"
 
-        JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_NUMBER}"
+        JPETSTOREDB="${DOCKER_USERNAME}/azurejpetstoredb:${BUILD_BUILDID}"
 
         deploy(){
 
