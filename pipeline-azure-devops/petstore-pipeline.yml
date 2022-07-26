@@ -78,6 +78,7 @@ jobs:
           export COMMIT=$(git rev-parse HEAD)
 
           python3 -m pip install -r ./pipeline-common/publish_data/requirements.txt 
+          ls ./pipeline-common/publish_data/
           python3 ./pipeline-common/publish_data/publish.py --build
         
   - task: Bash@3
