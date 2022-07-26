@@ -76,8 +76,6 @@ jobs:
           export RUN_ID=$BUILD_NUMBER
           export BRANCH=$BUILD_SOURCEBRANCHNAME
           export COMMIT=$(git rev-parse HEAD)
-
-          echo "publishing data"
   
           python3 -m pip install -r ./pipeline-common/publish_data/requirements.txt 
           
