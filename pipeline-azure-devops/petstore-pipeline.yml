@@ -262,7 +262,7 @@ jobs:
           kubectl delete job jpetstoredb --ignore-not-found -n $NAMESPACE --kubeconfig tmp_kube_config
           helm package --destination chart_zip/modernpets ./helm/modernpets
 
-          helm upgrade --install --wait --set image.repository=$DOCKER_USERNAME --set image.tag=$BUILD_NUMBER --set mysql.url=$mysql_url --set mysql.username=$mysql_user --set mysql.password=$mysql_password --set isDBAAS=True --set isLB=False --set httpHost=$petstore_host --namespace=$NAMESPACE --create-namespace $NAMESPACE --kubeconfig tmp_kube_config chart_zip/modernpets/modernpets-0.1.5.tgz
+          helm upgrade --install --wait --set image.repository=$DOCKER_USERNAME --set image.tag=$BUILD_BUILDID --set mysql.url=$mysql_url --set mysql.username=$mysql_user --set mysql.password=$mysql_password --set isDBAAS=True --set isLB=False --set httpHost=$petstore_host --namespace=$NAMESPACE --create-namespace $NAMESPACE --kubeconfig tmp_kube_config chart_zip/modernpets/modernpets-0.1.5.tgz
 
           echo "\n\nYour application is available at http://jpetstore-web.${petstore_host}\n\n"
 
