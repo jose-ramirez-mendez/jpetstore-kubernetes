@@ -140,6 +140,7 @@ jobs:
           python3 publish.py --test
           
           cd ..
+          
           cd ..
       
   - task: Bash@3
