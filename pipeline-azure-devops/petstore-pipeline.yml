@@ -207,9 +207,6 @@ jobs:
 
             docker scan --accept-license  $JPETSTOREDB
 
-            docker rmi  $JPETSTOREWEB
-            docker rmi  $JPETSTOREDB
-
             return 0
         }
 
