@@ -24,8 +24,8 @@ jobs:
       DOCKER_USERNAME: $(DOCKER_USER)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
       BUILD_NUMBER: $(Build.BuildNumber)
-      TENANT_URL: ${TENANT_URL}
-      BUILD_TOKEN: ${BUILD_TOKEN}
+      TENANT_URL: $(TENANT_URL)
+      BUILD_TOKEN: $(BUILD_TOKEN)
     inputs:
       targetType: inline
       script: >
@@ -85,6 +85,7 @@ jobs:
     displayName: Test
     env:
       BUILD_NUMBER: $(Build.BuildNumber)
+      TEST_TOKEN: $(TEST_TOKEN)
     inputs:
       targetType: inline
       script: >
@@ -145,6 +146,10 @@ jobs:
       
   - task: Bash@3
     displayName: Secure
+    env:
+      DOCKER_USERNAME: $(DOCKER_USER)
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+      BUILD_NUMBER: $(Build.BuildNumber)
     inputs:
       targetType: inline
       script: >
