@@ -77,8 +77,10 @@ jobs:
           export BRANCH=$BUILD_SOURCEBRANCHNAME
           export COMMIT=$(git rev-parse HEAD)
 
-          ls ./pipeline-common/publish_data/
+          echo "publishing data"
+  
           python3 -m pip install -r ./pipeline-common/publish_data/requirements.txt 
+          
           python3 ./pipeline-common/publish_data/publish.py --build
         
   - task: Bash@3
