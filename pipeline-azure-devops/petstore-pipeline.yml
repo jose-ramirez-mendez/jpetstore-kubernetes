@@ -267,7 +267,7 @@ jobs:
           app=$(kubectl get  ingress -n $NAMESPACE --kubeconfig tmp_kube_config | base64 | tr -d '\r')
           app_decoded=$(kubectl get  ingress -n $NAMESPACE --kubeconfig tmp_kube_config | tr -d '\r')
           echo app running at $app_decoded
-          chmod +x result.sh
+          sudo chmod +x result.sh
           ./result.sh ${app}
 
         }
