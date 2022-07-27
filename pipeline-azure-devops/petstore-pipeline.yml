@@ -8,8 +8,8 @@
 # Variable 'SONARQUBE_TOKEN' was defined in the Variables tab
 # Variable 'TENANT_URL' was defined in the Variables tab
 # Variable 'TEST_TOKEN' was defined in the Variables tab
-# Variable 'USER_API_KEY' was defined in the Variables tab
-# Variable 'USER_ID' was defined in the Variables tab
+# Variable 'SYSTEM_USER_API_KEY' was defined in the Variables tab
+# Variable 'SYSTEM_USER_ID' was defined in the Variables tab
 jobs:
 - job: Job_1
   displayName: Main Agent
@@ -222,17 +222,13 @@ jobs:
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
       BUILD_NUMBER: $(Build.BuildNumber)
       DEPLOY_TOKEN: $(DEPLOY_TOKEN)
-      USER_ID: $(USER_ID)
-      USER_API_KEY: $(USER_API_KEY)
+      TENANT_SYSTEM_USER_NAME: $(SYSTEM_USER_ID)
+      TENANT_SYSTEM_USER_API_KEY: $(SYSTEM_USER_API_KEY)
       TENANT_URL: $(TENANT_URL)
     inputs:
       targetType: inline
       script: >
       
-        export TENANT_SYSTEM_USER_NAME="${USER_ID}"
-
-        export TENANT_SYSTEM_USER_API_KEY="${USER_API_KEY}"
-
         echo "Reading order details from marketplace..."
 
         python3 ./pipeline-common/marketplace_order_reader.py
